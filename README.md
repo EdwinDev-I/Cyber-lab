@@ -324,3 +324,7 @@ This repository contains:
 The complete incident response workflow is available here:
 
 [Incident Response Playbook](./Incident-Response-Playbook.md)
+
+## ⚠️ Disclaimer
+All experiments in this repository were conducted in a controlled lab environment for educational and research purposes only.
+No real systems or networks were targeted.
