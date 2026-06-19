@@ -28,3 +28,178 @@
 ---
 
 Restrict SSH to your IP if possible.
+
+---
+
+## Step-2:
+
+### Connect To The Server
+
+```
+ssh -i wazuh-key.pem ubuntu@<EC2_PUBLIC_IP>
+```
+update packages:
+```
+sudo apt update && sudo apt upgrade -y
+```
+
+---
+## Step-3:
+
+### Install Wazuh Manager
+
+Download the  Wazuh Manager installation script:
+```
+curl -sO https://packages.wazuh.com/4.14/wazuh-install.sh
+```
+Run the installer: 
+```
+sudo bash wazuh-install.sh -a
+```
+The -a installs the complete stack:
+- Wazuh Manager
+- Wazuh Indexer
+- Wazuh Dashboard
+- Filebeat
+
+---
+## Step-4:
+
+### Save The Generated Credentials
+
+The installer outputs:
+- Dashboard username
+- Dashboard password
+Save them.
+
+You can also check:
+```
+sudo cat wazuh-passwords.txt
+```
+
+---
+## Step-5:
+
+### Verify Wazuh services 
+
+check:
+```
+sudo systemctl status wazuh-manager
+```
+Also:
+```
+sudo systemctl status wazuh-indexer
+sudo systemctl status wazuh-dashboard
+```
+All should show:
+```
+active (running)
+```
+
+
+---
+## Step-6:
+
+### Access the Dashboard
+
+open:
+```
+https://<EC2_PUBLIC_IP>
+```
+Accept the certificate warning.
+
+Login with:
+```
+Username: admin
+Password: <generated password>
+```
+
+
+---
+## Step-7
+
+### Deploy Wazuh Agent
+
+Windows-agent example:
+
+In Wazuh Dashboard:
+```
+Agent → Deploy new agent
+```
+chose:
+```
+windwos
+```
+Enter:
+- Agent name
+- server ip
+
+It generates installation commands:
+
+Example:
+```
+Invoke-WebRequest -Uri https://packages.wazuh.com/... -OutFile wazuh.msi
+msiexec.exe /i wazuh.msi /q WAZUH_MANAGER="YOUR_EC2_IP"
+```
+Start agent:
+```
+NET Start Wazuh
+```
+
+
+---
+## Step-8
+
+### Comfirm Agent Connection
+
+On Manger:
+```
+sudo /var/ossec/bin/agent_control -lc
+```
+You should see:
+```
+ID Name Status
+001 Windows-Agent Active
+```
+Or  you could just check directly in the wazuh maneger dashboard.
+
+
+
+---
+## Step-9
+
+### Enable useful monitoring
+
+Edit:
+```
+sudo nano /var/ossec/etc/ossec.conf
+```
+Enable things like:
+- Syscheck (file integrity monitoring)
+- Rootcheck
+- Log collection
+- Vulnerability dection
+
+Restart:
+```
+sudo systemctl restart wazuh-manager
+```
+
+
+---
+## Step-10
+
+### Test detection
+
+On windows agent:
+
+Create a test file:
+```
+echo test > C:\test.txt
+```
+or trigger failed logins.
+
+Check:
+```
+Wazuh Dashboard → Security-events
+```
