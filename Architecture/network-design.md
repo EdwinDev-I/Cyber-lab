@@ -164,25 +164,19 @@ The goal was to mirror network traffic from the monitored instances and forward 
 
 Traffic Mirroring architecture:
 ```
-Monitored EC2 Instance
-|
-|
-Traffic Mirror Source
-|
-|
-Traffic Mirror Session
-|
-|
-Traffic Mirror Target
-|
-|
-Suricata Sensor (Ubuntu)
-|
-|
-eve.json
-|
-|
-Wazuh Monitoring
+Kali Linux (Attacker)
+        |
+        | Attack traffic
+        v
+Windows Server EC2
+        |
+        | VPC Traffic Mirror
+        v
+Suricata IDS EC2
+        |
+        | eve.json / alerts
+        v
+Wazuh Manager / SOC Dashboard
 ```
 
 ---
@@ -274,8 +268,24 @@ Traffic Mirroring resources were created successfully.
 
 ⚠️However, Suricata was still mainly observing traffic directly reaching its own EC2 interface rather than the expected mirrored traffic.
 
-Further troubleshooting required:
-- Verify ENI compatibility
-- Verify mirror source selection
-- Verify security group routing
-- Confirm mirrored packets reach the sensor interface
+## Update network architecture diagram with VPC traffic mirroring status
+
+### Network Traffic Mirroring Status
+
+The network architecture has been updated to include AWS VPC Traffic Mirroring.
+
+Current implementation:
+- ✅ Traffic Mirror Session created
+- ✅ Source ENI configured (Windows Server EC2)
+- ✅ Target ENI configured (Suricata IDS EC2)
+- ✅ Mirrored traffic is reaching the Suricata instance
+- ⚠️ Detection of all attack traffic is still under investigation
+
+Current limitation:
+Suricata is successfully receiving mirrored AWS network traffic, but some simulated attack traffic from the external Kali Linux environment is not yet being detected as expected.
+
+The next troubleshooting steps include:
+- Verifying Suricata interface capture configuration
+- Validating VPC routing and Security Group rules
+- Testing Suricata rules against mirrored packets
+- Confirming that mirrored traffic contains the expected payload
