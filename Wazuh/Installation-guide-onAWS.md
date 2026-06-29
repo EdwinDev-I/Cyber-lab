@@ -203,4 +203,4 @@ Check:
 ```
 Wazuh Dashboard → Security-events
 ```
-![Wazuh-Dashboard](../Image/Wazuh-Dashboard.png)
+![Wazuh-Dashboard](./Image/Wazuh-Dashboard.png)
