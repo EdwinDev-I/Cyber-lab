@@ -353,3 +353,7 @@ Wazuh Manager
 
 ---
 
+## Traffic-Mirroring Image:
+
+![Packet-Mirroring](./Image/Traffic-sniffing.png)
+
