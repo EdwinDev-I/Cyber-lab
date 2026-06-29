@@ -208,7 +208,7 @@ During testing, eve.json was producing events while fast.log was not showing exp
 
 The main alert source used was:
 
-```
+```bash
 /var/log/suricata/eve.json
 ```
 
@@ -254,7 +254,7 @@ hydra -l <username> -P <password-list> rdp://<Windows-IP>
 
 Expected Suricata events:
 
-```
+```yaml
 ET POLICY MS Remote Desktop Administrator Login Request
 
 ET INFO RDP Response To External Host
@@ -296,7 +296,7 @@ sudo tail -f /var/ossec/logs/archives/archives.json | grep suricata
 
 # Final Architecture
 
-```
+```yaml
 Kali Linux
 (Attacker)
       |
@@ -353,7 +353,7 @@ Resolved:
 
 # Final Architecture
 
-```
+```yaml
  Kali Linux
  (Attack Simulation)
    |
@@ -406,14 +406,14 @@ Rules existed but Suricata was searching the wrong directory.
 
 Configuration:
 
-```
-default-rule-path: /var/lib/suricata/rules
+```bash
+ default-rule-path: /var/lib/suricata/rules
 ```
 
 but custom rules existed in:
 
-```
-etc/suricata/rules/
+```bash
+  etc/suricata/rules/
 ```
 ----
 
@@ -422,27 +422,27 @@ etc/suricata/rules/
 Copy rules:
 
 ```bash
-sudo cp /etc/suricata/rules/custom.rules \
+ sudo cp /etc/suricata/rules/custom.rules 
 /var/lib/suricata/rules/
 ```
 
 Verify:
 
-```
-ls /var/lib/suricata/rules
+```bash
+  ls /var/lib/suricata/rules
 ```
 
 Expected:
 
-```
-suricata.rules
-custom.rules
+```bash
+ suricata.rules
+ custom.rules
 ```
 
 Test:
 
-```
-sudo suricata -T -c /etc/suricata/suricata.yaml
+```bash
+  sudo suricata -T -c /etc/suricata/suricata.yaml
 ```
 
 Expected:
@@ -454,8 +454,8 @@ Enabled rules
 
 Restart:
 
-```
-sudo systemctl restart suricata
+```bash
+  sudo systemctl restart suricata
 ```
 
 ---
@@ -464,14 +464,14 @@ sudo systemctl restart suricata
 
 Location
 
-```
-sudo nano /var/lib/suricata/rules/custom.rules
+```bash
+   sudo nano /var/lib/suricata/rules/custom.rules
 ```
 
 Example RDP brute force rule:
 
-```
-alert tcp any any -> $HOME_NET 3389 \
+```bash
+ alert tcp any any -> $HOME_NET 3389 \
 (msg:"Possible RDP Brute Force Attempt"; \
 flow:to_server; \
 flags:S; \
@@ -481,8 +481,8 @@ sid:1000001; rev:1;)
 
 Validate:
 
-```
-sudo suricata -T -c /etc/suricata/suricata.yaml
+```bash
+  sudo suricata -T -c /etc/suricata/suricata.yaml
 ```
 
 ![Updated-Troubleshooting-image](Architecture/Image/Troubleshooting-image-completed-version.jpeg)
