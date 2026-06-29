@@ -273,7 +273,7 @@ sudo tail -f /var/ossec/logs/archives/archives.json | grep suricata
 ```
 
 ---
-[TroubleShooting-Image](../Architecture/Image/Troubleshooting-image.jpeg)
+[TroubleShooting-Image](Architecture/Image/Troubleshooting-image.jpeg)
 
 ---
 
