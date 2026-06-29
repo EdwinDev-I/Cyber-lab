@@ -1,4 +1,4 @@
-# 🪛🔧🛠️Suricata + AWS Traffic Mirroring Troubleshooting Guide
+# 🪛🛠️Suricata + AWS Traffic Mirroring Troubleshooting Guide
 
 ## Project Status Update
 
@@ -72,6 +72,9 @@ and:
 
 SC_ERR_NO_RULES(42) No rule files match
 
+----
+
+
 ## Cause
 
 Rules existed but Suricata was searching the wrong directory.
@@ -87,6 +90,8 @@ but custom rules existed in:
 ```
 etc/suricata/rules/
 ```
+----
+
 ## Fix
 
 Copy rules:
@@ -94,3 +99,66 @@ Copy rules:
 ```bash
 sudo cp /etc/suricata/rules/custom.rules \
 /var/lib/suricata/rules/
+```
+
+Verify:
+
+```
+ls /var/lib/suricata/rules
+```
+
+Expected:
+
+```
+suricata.rules
+custom.rules
+```
+
+Test:
+
+```
+sudo suricata -T -c /etc/suricata/suricata.yaml
+```
+
+Expected:
+
+```
+Loaded rules
+Enabled rules
+```
+
+Restart:
+
+```
+sudo systemctl restart suricata
+```
+
+---
+
+### Custom Detection Rules
+
+Location
+
+```
+sudo nano /var/lib/suricata/rules/custom.rules
+```
+
+Example RDP brute force rule:
+
+```
+alert tcp any any -> $HOME_NET 3389 \
+(msg:"Possible RDP Brute Force Attempt"; \
+flow:to_server; \
+flags:S; \
+threshold:type both, track by_src, count 5, seconds 60; \
+sid:1000001; rev:1;)
+```
+
+Validate:
+
+```
+sudo suricata -T -c /etc/suricata/suricata.yaml
+```
+
+![Updated-Troubleshooting-image](Architecture/Image/Troubleshooting-image-completed-version.jpeg)
+
