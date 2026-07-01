@@ -7,6 +7,10 @@
 
 The lab simulates a real-world security monitoring environment using AWS infrastructure, endpoint monitoring, network detection, and attack simulation.
 
+<a href="https://aws.amazon.com/security/penetration-testing/">
+<img src="https://img.shields.io/badge/AWS%20☁️%20LINKEDIN-232F3E?style=for-the-badge&logo=amazonaws&logoColor=FF9900">
+</a>
+
 ---
 
 # Architecture Components
